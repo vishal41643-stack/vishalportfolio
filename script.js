@@ -116,22 +116,49 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-// Enhanced Parallax Effect for Hero Section
+// Enhanced Parallax Effect with 3D Perspective
 window.addEventListener('scroll', function() {
     const scrolled = window.pageYOffset;
     const hero = document.querySelector('.hero');
     if (hero) {
-        const rate = scrolled * -0.3;
-        hero.style.transform = `translateY(${rate}px)`;
+        const rate = scrolled * -0.2;
+        hero.style.transform = `translateY(${rate}px) rotateX(${scrolled * 0.01}deg)`;
         
-        // Add parallax to shapes
+        // Add 3D parallax to shapes
         const shapes = document.querySelectorAll('.shape');
         shapes.forEach((shape, index) => {
-            const speed = 0.5 + (index * 0.1);
+            const speed = 0.3 + (index * 0.1);
             const yPos = scrolled * speed;
-            shape.style.transform = `translateY(${yPos}px)`;
+            const rotateX = scrolled * 0.02;
+            const rotateY = scrolled * 0.01;
+            shape.style.transform = `translateY(${yPos}px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
         });
+        
+        // Add 3D parallax to geometric shapes
+        const triangle = document.querySelector('.hero-container::before');
+        const hexagon = document.querySelector('.hero-container::after');
+        if (triangle) {
+            triangle.style.transform = `translateZ(${scrolled * 0.1}px) rotateX(${scrolled * 0.05}deg)`;
+        }
+        if (hexagon) {
+            hexagon.style.transform = `translateZ(${scrolled * 0.15}px) rotateY(${scrolled * 0.03}deg)`;
+        }
     }
+    
+    // Add 3D scroll effect to sections
+    const sections = document.querySelectorAll('section');
+    sections.forEach((section, index) => {
+        const rect = section.getBoundingClientRect();
+        const isVisible = rect.top < window.innerHeight && rect.bottom > 0;
+        
+        if (isVisible) {
+            const scrollPercent = (window.innerHeight - rect.top) / window.innerHeight;
+            const rotateX = (scrollPercent - 0.5) * 10;
+            const translateZ = (scrollPercent - 0.5) * 50;
+            
+            section.style.transform = `rotateX(${rotateX}deg) translateZ(${translateZ}px)`;
+        }
+    });
 });
 
 // Typing Animation for Hero Title
@@ -160,7 +187,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-// Enhanced 3D Card Hover Effect
+// Enhanced 3D Card Hover Effect with Particle Explosion
 document.querySelectorAll('.project-card').forEach(card => {
     card.addEventListener('mousemove', function(e) {
         const rect = card.getBoundingClientRect();
@@ -170,25 +197,75 @@ document.querySelectorAll('.project-card').forEach(card => {
         const centerX = rect.width / 2;
         const centerY = rect.height / 2;
         
-        const rotateX = (y - centerY) / 8;
-        const rotateY = (centerX - x) / 8;
+        const rotateX = (y - centerY) / 6;
+        const rotateY = (centerX - x) / 6;
         
-        card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateZ(20px)`;
+        card.style.transform = `perspective(2000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateZ(30px) scale(1.05)`;
         
-        // Add glow effect
+        // Enhanced glow effect
         card.style.boxShadow = `
-            0 25px 50px rgba(0, 0, 0, 0.2),
-            0 0 0 1px rgba(255, 255, 255, 0.1),
-            inset 0 1px 0 rgba(255, 255, 255, 0.2),
-            0 0 30px rgba(102, 126, 234, 0.3)
+            0 35px 70px rgba(0, 0, 0, 0.3),
+            0 0 0 1px rgba(255, 255, 255, 0.2),
+            inset 0 1px 0 rgba(255, 255, 255, 0.3),
+            0 0 50px rgba(102, 126, 234, 0.6),
+            0 0 100px rgba(102, 126, 234, 0.3)
         `;
+        
+        // Create particle explosion effect
+        createParticleExplosion(e.clientX, e.clientY);
     });
     
     card.addEventListener('mouseleave', function() {
-        card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateZ(0px)';
+        card.style.transform = 'perspective(2000px) rotateX(0deg) rotateY(0deg) translateZ(0px) scale(1)';
         card.style.boxShadow = '0 10px 30px rgba(0, 0, 0, 0.1)';
     });
 });
+
+// Particle Explosion Effect
+function createParticleExplosion(x, y) {
+    const particleCount = 15;
+    const colors = ['#667eea', '#764ba2', '#f093fb', '#ffffff'];
+    
+    for (let i = 0; i < particleCount; i++) {
+        const particle = document.createElement('div');
+        const color = colors[Math.floor(Math.random() * colors.length)];
+        const size = Math.random() * 4 + 2;
+        const angle = (Math.PI * 2 * i) / particleCount;
+        const velocity = Math.random() * 100 + 50;
+        
+        particle.style.cssText = `
+            position: fixed;
+            left: ${x}px;
+            top: ${y}px;
+            width: ${size}px;
+            height: ${size}px;
+            background: ${color};
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 10000;
+            box-shadow: 0 0 10px ${color};
+        `;
+        
+        document.body.appendChild(particle);
+        
+        // Animate particle
+        const animation = particle.animate([
+            {
+                transform: 'translate(0, 0) scale(1)',
+                opacity: 1
+            },
+            {
+                transform: `translate(${Math.cos(angle) * velocity}px, ${Math.sin(angle) * velocity}px) scale(0)`,
+                opacity: 0
+            }
+        ], {
+            duration: 1000,
+            easing: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)'
+        });
+        
+        animation.onfinish = () => particle.remove();
+    }
+}
 
 // Floating Animation for Shapes
 function createFloatingAnimation() {

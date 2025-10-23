@@ -30,9 +30,17 @@ body {
     background: rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(20px);
     z-index: 1000;
-    transition: all 0.3s ease;
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     border-bottom: 1px solid rgba(255, 255, 255, 0.2);
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    transform-style: preserve-3d;
+    perspective: 1000px;
+    animation: navFloat 12s ease-in-out infinite;
+}
+
+@keyframes navFloat {
+    0%, 100% { transform: translateY(0px) rotateX(0deg); }
+    50% { transform: translateY(-3px) rotateX(1deg); }
 }
 
 .nav-container {
@@ -70,34 +78,28 @@ body {
     text-decoration: none;
     color: white;
     font-weight: 500;
-    transition: all 0.3s ease;
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     position: relative;
     padding: 8px 16px;
     border-radius: 25px;
     background: rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(10px);
+    transform-style: preserve-3d;
+    animation: linkFloat 6s ease-in-out infinite;
 }
 
-.nav-link::after {
-    content: '';
-    position: absolute;
-    bottom: -5px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 0;
-    height: 2px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
-    transition: width 0.3s ease;
+@keyframes linkFloat {
+    0%, 100% { transform: translateZ(0px) rotateX(0deg); }
+    50% { transform: translateZ(5px) rotateX(2deg); }
 }
 
 .nav-link:hover {
     background: rgba(255, 255, 255, 0.2);
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-}
-
-.nav-link:hover::after {
-    width: 80%;
+    transform: translateY(-5px) translateZ(10px) rotateX(5deg) scale(1.1);
+    box-shadow: 
+        0 10px 25px rgba(0, 0, 0, 0.3),
+        0 0 20px rgba(102, 126, 234, 0.4);
+    animation-play-state: paused;
 }
 
 .hamburger {
@@ -122,6 +124,8 @@ body {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
     position: relative;
     overflow: hidden;
+    perspective: 1000px;
+    transform-style: preserve-3d;
 }
 
 .hero::before {
@@ -138,6 +142,7 @@ body {
     animation: float 20s ease-in-out infinite;
 }
 
+/* Add 3D Geometric Shapes */
 .hero::after {
     content: '';
     position: absolute;
@@ -149,6 +154,55 @@ body {
         linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.1) 50%, transparent 70%),
         linear-gradient(-45deg, transparent 30%, rgba(255, 255, 255, 0.05) 50%, transparent 70%);
     animation: shimmer 8s ease-in-out infinite;
+    z-index: 1;
+}
+
+/* Add 3D Geometric Elements */
+.hero-container::before {
+    content: '';
+    position: absolute;
+    top: 10%;
+    right: 10%;
+    width: 100px;
+    height: 100px;
+    background: linear-gradient(45deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+    clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+    animation: triangle3D 6s ease-in-out infinite;
+    z-index: 1;
+}
+
+.hero-container::after {
+    content: '';
+    position: absolute;
+    bottom: 20%;
+    left: 5%;
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(45deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+    clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+    animation: hexagon3D 8s ease-in-out infinite reverse;
+    z-index: 1;
+}
+
+@keyframes triangle3D {
+    0%, 100% { 
+        transform: translateZ(0px) rotateX(0deg) rotateY(0deg) rotateZ(0deg);
+    }
+    33% { 
+        transform: translateZ(30px) rotateX(60deg) rotateY(60deg) rotateZ(60deg);
+    }
+    66% { 
+        transform: translateZ(60px) rotateX(120deg) rotateY(120deg) rotateZ(120deg);
+    }
+}
+
+@keyframes hexagon3D {
+    0%, 100% { 
+        transform: translateZ(0px) rotateX(0deg) rotateY(0deg) scale(1);
+    }
+    50% { 
+        transform: translateZ(40px) rotateX(180deg) rotateY(180deg) scale(1.2);
+    }
 }
 
 @keyframes float {
@@ -176,10 +230,26 @@ body {
     align-items: center;
     position: relative;
     z-index: 2;
+    transform-style: preserve-3d;
+    animation: heroFloat 6s ease-in-out infinite;
+}
+
+@keyframes heroFloat {
+    0%, 100% { transform: translateY(0px) rotateX(0deg) rotateY(0deg); }
+    25% { transform: translateY(-10px) rotateX(2deg) rotateY(1deg); }
+    50% { transform: translateY(-20px) rotateX(0deg) rotateY(0deg); }
+    75% { transform: translateY(-10px) rotateX(-2deg) rotateY(-1deg); }
 }
 
 .hero-text {
     color: white;
+    transform-style: preserve-3d;
+    animation: textFloat 4s ease-in-out infinite;
+}
+
+@keyframes textFloat {
+    0%, 100% { transform: translateZ(0px) rotateX(0deg); }
+    50% { transform: translateZ(20px) rotateX(5deg); }
 }
 
 .hero-title {
@@ -187,6 +257,27 @@ body {
     font-weight: 800;
     line-height: 1.2;
     margin-bottom: 1.5rem;
+    transform-style: preserve-3d;
+    animation: title3D 8s ease-in-out infinite;
+}
+
+@keyframes title3D {
+    0%, 100% { 
+        transform: translateZ(0px) rotateX(0deg) rotateY(0deg) scale(1);
+        text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+    }
+    25% { 
+        transform: translateZ(30px) rotateX(5deg) rotateY(2deg) scale(1.02);
+        text-shadow: 0 0 30px rgba(255, 255, 255, 0.5);
+    }
+    50% { 
+        transform: translateZ(50px) rotateX(0deg) rotateY(0deg) scale(1.05);
+        text-shadow: 0 0 40px rgba(255, 255, 255, 0.7);
+    }
+    75% { 
+        transform: translateZ(30px) rotateX(-5deg) rotateY(-2deg) scale(1.02);
+        text-shadow: 0 0 30px rgba(255, 255, 255, 0.5);
+    }
 }
 
 .title-line {
@@ -345,6 +436,28 @@ body {
     border-radius: 50%;
     background: rgba(255, 255, 255, 0.1);
     animation: float 6s ease-in-out infinite;
+    transform-style: preserve-3d;
+    box-shadow: 
+        0 0 20px rgba(255, 255, 255, 0.2),
+        inset 0 0 20px rgba(255, 255, 255, 0.1);
+}
+
+.shape::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 60%;
+    height: 60%;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    animation: innerFloat 3s ease-in-out infinite reverse;
+}
+
+@keyframes innerFloat {
+    0%, 100% { transform: translate(-50%, -50%) rotate(0deg) scale(1); }
+    50% { transform: translate(-50%, -50%) rotate(180deg) scale(0.8); }
 }
 
 .shape-1 {
@@ -353,6 +466,7 @@ body {
     top: 20%;
     left: 10%;
     animation-delay: 0s;
+    animation: float3D 8s ease-in-out infinite;
 }
 
 .shape-2 {
@@ -361,6 +475,7 @@ body {
     top: 60%;
     right: 20%;
     animation-delay: 2s;
+    animation: float3D 6s ease-in-out infinite reverse;
 }
 
 .shape-3 {
@@ -369,6 +484,7 @@ body {
     bottom: 20%;
     left: 20%;
     animation-delay: 4s;
+    animation: float3D 10s ease-in-out infinite;
 }
 
 .shape-4 {
@@ -377,6 +493,22 @@ body {
     top: 10%;
     right: 10%;
     animation-delay: 1s;
+    animation: float3D 7s ease-in-out infinite reverse;
+}
+
+@keyframes float3D {
+    0%, 100% { 
+        transform: translateY(0px) translateZ(0px) rotateX(0deg) rotateY(0deg);
+    }
+    25% { 
+        transform: translateY(-30px) translateZ(20px) rotateX(45deg) rotateY(45deg);
+    }
+    50% { 
+        transform: translateY(-60px) translateZ(40px) rotateX(90deg) rotateY(90deg);
+    }
+    75% { 
+        transform: translateY(-30px) translateZ(20px) rotateX(135deg) rotateY(135deg);
+    }
 }
 
 .profile-card {
@@ -688,34 +820,28 @@ section {
     box-shadow: 
         0 10px 30px rgba(0, 0, 0, 0.1),
         0 0 0 1px rgba(255, 255, 255, 0.2);
-    transition: all 0.4s ease;
+    transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     backdrop-filter: blur(10px);
     position: relative;
     overflow: hidden;
+    transform-style: preserve-3d;
+    perspective: 1500px;
+    animation: skillFloat 10s ease-in-out infinite;
 }
 
-.skill-category::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
-    opacity: 0;
-    transition: opacity 0.3s ease;
+@keyframes skillFloat {
+    0%, 100% { transform: translateY(0px) rotateX(0deg) rotateY(0deg); }
+    33% { transform: translateY(-8px) rotateX(3deg) rotateY(2deg); }
+    66% { transform: translateY(-15px) rotateX(0deg) rotateY(0deg); }
 }
 
 .skill-category:hover {
-    transform: translateY(-10px) scale(1.02);
+    transform: translateY(-20px) scale(1.08) rotateX(8deg) rotateY(8deg);
     box-shadow: 
-        0 20px 40px rgba(0, 0, 0, 0.15),
+        0 30px 60px rgba(0, 0, 0, 0.2),
         0 0 0 1px rgba(255, 255, 255, 0.3),
-        0 0 20px rgba(102, 126, 234, 0.2);
-}
-
-.skill-category:hover::before {
-    opacity: 1;
+        0 0 30px rgba(102, 126, 234, 0.3);
+    animation-play-state: paused;
 }
 
 .skill-category h3 {
@@ -814,18 +940,28 @@ section {
     border-radius: 20px;
     overflow: hidden;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-    transition: all 0.4s ease;
+    transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     position: relative;
     transform-style: preserve-3d;
-    perspective: 1000px;
+    perspective: 2000px;
+    animation: cardFloat 8s ease-in-out infinite;
+}
+
+@keyframes cardFloat {
+    0%, 100% { transform: translateY(0px) rotateX(0deg) rotateY(0deg); }
+    25% { transform: translateY(-5px) rotateX(2deg) rotateY(1deg); }
+    50% { transform: translateY(-10px) rotateX(0deg) rotateY(0deg); }
+    75% { transform: translateY(-5px) rotateX(-2deg) rotateY(-1deg); }
 }
 
 .project-card:hover {
-    transform: translateY(-15px) rotateX(5deg) rotateY(5deg);
+    transform: translateY(-25px) rotateX(10deg) rotateY(10deg) scale(1.05);
     box-shadow: 
-        0 25px 50px rgba(0, 0, 0, 0.2),
-        0 0 0 1px rgba(255, 255, 255, 0.1),
-        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        0 35px 70px rgba(0, 0, 0, 0.3),
+        0 0 0 1px rgba(255, 255, 255, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3),
+        0 0 50px rgba(102, 126, 234, 0.4);
+    animation-play-state: paused;
 }
 
 .project-card::before {
