@@ -55,26 +55,47 @@ window.addEventListener('scroll', function() {
     }
 });
 
-// Intersection Observer for Animations
+// Enhanced Intersection Observer for Animations
 const observerOptions = {
     threshold: 0.1,
     rootMargin: '0px 0px -50px 0px'
 };
 
 const observer = new IntersectionObserver(function(entries) {
-    entries.forEach(entry => {
+    entries.forEach((entry, index) => {
         if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
+            setTimeout(() => {
+                entry.target.classList.add('visible');
+            }, index * 100); // Staggered animation
         }
     });
 }, observerOptions);
 
 // Observe elements for animation
 document.addEventListener('DOMContentLoaded', function() {
-    // Add animation classes to elements
-    const animatedElements = document.querySelectorAll('.skill-category, .project-card, .stat-item, .contact-item');
-    animatedElements.forEach(el => {
-        el.classList.add('fade-in');
+    // Add different animation classes to elements
+    const skillCategories = document.querySelectorAll('.skill-category');
+    const projectCards = document.querySelectorAll('.project-card');
+    const statItems = document.querySelectorAll('.stat-item');
+    const contactItems = document.querySelectorAll('.contact-item');
+    
+    skillCategories.forEach(el => {
+        el.classList.add('slide-in-left');
+        observer.observe(el);
+    });
+    
+    projectCards.forEach(el => {
+        el.classList.add('scale-in');
+        observer.observe(el);
+    });
+    
+    statItems.forEach(el => {
+        el.classList.add('bounce-in');
+        observer.observe(el);
+    });
+    
+    contactItems.forEach(el => {
+        el.classList.add('slide-in-right');
         observer.observe(el);
     });
 
@@ -95,13 +116,21 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-// Parallax Effect for Hero Section
+// Enhanced Parallax Effect for Hero Section
 window.addEventListener('scroll', function() {
     const scrolled = window.pageYOffset;
     const hero = document.querySelector('.hero');
     if (hero) {
-        const rate = scrolled * -0.5;
+        const rate = scrolled * -0.3;
         hero.style.transform = `translateY(${rate}px)`;
+        
+        // Add parallax to shapes
+        const shapes = document.querySelectorAll('.shape');
+        shapes.forEach((shape, index) => {
+            const speed = 0.5 + (index * 0.1);
+            const yPos = scrolled * speed;
+            shape.style.transform = `translateY(${yPos}px)`;
+        });
     }
 });
 
@@ -131,7 +160,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-// 3D Card Hover Effect
+// Enhanced 3D Card Hover Effect
 document.querySelectorAll('.project-card').forEach(card => {
     card.addEventListener('mousemove', function(e) {
         const rect = card.getBoundingClientRect();
@@ -141,14 +170,23 @@ document.querySelectorAll('.project-card').forEach(card => {
         const centerX = rect.width / 2;
         const centerY = rect.height / 2;
         
-        const rotateX = (y - centerY) / 10;
-        const rotateY = (centerX - x) / 10;
+        const rotateX = (y - centerY) / 8;
+        const rotateY = (centerX - x) / 8;
         
-        card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateZ(10px)`;
+        card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateZ(20px)`;
+        
+        // Add glow effect
+        card.style.boxShadow = `
+            0 25px 50px rgba(0, 0, 0, 0.2),
+            0 0 0 1px rgba(255, 255, 255, 0.1),
+            inset 0 1px 0 rgba(255, 255, 255, 0.2),
+            0 0 30px rgba(102, 126, 234, 0.3)
+        `;
     });
     
     card.addEventListener('mouseleave', function() {
         card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateZ(0px)';
+        card.style.boxShadow = '0 10px 30px rgba(0, 0, 0, 0.1)';
     });
 });
 
@@ -256,8 +294,8 @@ function createScrollProgress() {
 // Initialize scroll progress
 document.addEventListener('DOMContentLoaded', createScrollProgress);
 
-// Particle System for Hero Section
-function createParticles() {
+// Enhanced Particle System for Hero Section
+function createAdvancedParticles() {
     const hero = document.querySelector('.hero');
     if (!hero) return;
     
@@ -271,30 +309,60 @@ function createParticles() {
         height: 100%;
         pointer-events: none;
         overflow: hidden;
+        z-index: 1;
     `;
     
     hero.appendChild(particleContainer);
     
-    // Create particles
-    for (let i = 0; i < 50; i++) {
+    // Create different types of particles
+    for (let i = 0; i < 80; i++) {
         const particle = document.createElement('div');
+        const size = Math.random() * 4 + 1;
+        const speed = Math.random() * 3 + 1;
+        const delay = Math.random() * 5;
+        
         particle.style.cssText = `
             position: absolute;
-            width: 2px;
-            height: 2px;
-            background: rgba(255, 255, 255, 0.5);
+            width: ${size}px;
+            height: ${size}px;
+            background: rgba(255, 255, 255, ${Math.random() * 0.5 + 0.2});
             border-radius: 50%;
-            animation: float ${3 + Math.random() * 4}s ease-in-out infinite;
-            animation-delay: ${Math.random() * 2}s;
+            animation: floatParticle ${speed}s ease-in-out infinite;
+            animation-delay: ${delay}s;
             left: ${Math.random() * 100}%;
             top: ${Math.random() * 100}%;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
         `;
         particleContainer.appendChild(particle);
     }
 }
 
+// Add CSS for particle animation
+const particleStyle = document.createElement('style');
+particleStyle.textContent = `
+    @keyframes floatParticle {
+        0%, 100% { 
+            transform: translateY(0px) translateX(0px) rotate(0deg);
+            opacity: 0.3;
+        }
+        25% { 
+            transform: translateY(-20px) translateX(10px) rotate(90deg);
+            opacity: 0.8;
+        }
+        50% { 
+            transform: translateY(-40px) translateX(-10px) rotate(180deg);
+            opacity: 1;
+        }
+        75% { 
+            transform: translateY(-20px) translateX(5px) rotate(270deg);
+            opacity: 0.6;
+        }
+    }
+`;
+document.head.appendChild(particleStyle);
+
 // Initialize particles
-document.addEventListener('DOMContentLoaded', createParticles);
+document.addEventListener('DOMContentLoaded', createAdvancedParticles);
 
 // Cursor Trail Effect
 function createCursorTrail() {
